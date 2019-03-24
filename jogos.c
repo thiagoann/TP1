@@ -196,8 +196,10 @@ int equipas_ordena(vetor_equipas *v, int criterio){
     //Declaracao das variaveis
     int t;
     int fim, ini;
-    int i/*inicio*/, j/*final*/;
-    equipa *pivot, *aux,*pivot2;
+    int i/*inicio*/, 
+    j/*final*/;
+    int temp, pos_pivot;
+    equipa *pivot, *aux, *pivot2;
 
     i = ini;
     j = fim - 1;
@@ -210,36 +212,11 @@ int equipas_ordena(vetor_equipas *v, int criterio){
         //Ler vetor
             for(t = 0; t<vetor_equipas_tamanho(v); t++){
                     
-                    //Ordenacao de golos por quicksort
+                    //Ordenacao de golos e nomes da equipas por quicksort
 
-                        if(criterio == 1){
-                    //Ciclo infinito
-                    while(1){
-                       
-                       while(i < fim && vetor_equipas_elemento(v, i)->diff_golos <= pivot->diff_golos)
-                       i++;//Avança para a próxima posicao
-
-                       while(vetor_equipas_elemento(v, fim)->diff_golos <= pivot->diff_golos)
-                           j--;//Recua
-
-                           if(i < j){
-                               //faz a troca
-                               vetor_equipas_elemento(v, i)->diff_golos = vetor_equipas_elemento(v, j)->diff_golos;
-                           }else break;
-                        }        
-                                //repoe pivot
-                                vetor_equipas_elemento(v, i)->diff_golos = vetor_equipas_elemento(v, fim)->diff_golos;
-                            
-
-                        }
-                            //OK! Agora fazer quicksort para strings
-                            /**
-                             * Novamente um ciclo while, só que dessa vez devemos usar strings
-                             * Esta retorna um inteiro
-                             * Devo manipular strings!!!
-                             */
-                            else if(criterio == 0){
-                                 
+                        if(criterio == 0){
+                    //Enquanto isso for verdade
+                    
                                  while(1){
                                 
                                     while(i < fim && strcmp(vetor_equipas_elemento(v, i)->nome_equipa, pivot2->nome_equipa) < 0)
@@ -255,9 +232,41 @@ int equipas_ordena(vetor_equipas *v, int criterio){
                                     strcpy(aux->nome_equipa, vetor_equipas_elemento(v, i)->nome_equipa);
                                     strcpy(vetor_equipas_elemento(v, i)->nome_equipa, vetor_equipas_elemento(v, j)->nome_equipa);
                                     strcpy(vetor_equipas_elemento(v, i)->nome_equipa, aux->nome_equipa);
-                                    }
+                                    }else break;
                                 }
+                                    //repoe pivot
+                                    strcpy(aux->nome_equipa, vetor_equipas_elemento(v, pos_pivot)->nome_equipa);
+                                    strcpy(vetor_equipas_elemento(v, pos_pivot)->nome_equipa, vetor_equipas_elemento(v, j)->nome_equipa);
+                                    strcpy(vetor_equipas_elemento(v, j)->nome_equipa, aux->nome_equipa);
                             }          
+                            //OK! Agora fazer quicksort para inteiros
+                            /**
+                             * Novamente um ciclo while, só que dessa vez devemos usar int
+                             */
+
+                            else if(criterio == 1){
+                                 while(1){
+                       
+                       while(i < fim && vetor_equipas_elemento(v, i)->diff_golos <= pivot->diff_golos)
+                       i++;//Avança para a próxima posicao
+
+                       while(vetor_equipas_elemento(v, j)->diff_golos >= pivot->diff_golos)
+                           j--;//Recua
+
+                           if(i<j){
+                               //faz a troca
+                                temp = vetor_equipas_elemento(v, i)->diff_golos;                  
+                               vetor_equipas_elemento(v, i)->diff_golos = vetor_equipas_elemento(v, j)->diff_golos;
+                               vetor_equipas_elemento(v, j)->diff_golos = temp;
+                           }
+                            else break;
+                        }        
+                                //repoe pivot
+                                temp = vetor_equipas_elemento(v, pos_pivot)->diff_golos;
+                                vetor_equipas_elemento(v, pos_pivot)->diff_golos = vetor_equipas_elemento(v, j)->diff_golos;
+                                vetor_equipas_elemento(v, j)->diff_golos = temp;
+
+                        }
                 }     
     return 0;
 }
